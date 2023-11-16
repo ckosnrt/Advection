@@ -82,14 +82,22 @@ def semi_lagrangian(phi, x, dx, nt, c):
 
 def total_var(phi, nt):
     nx = len(phi)
-    phiNew = phi.copy()
     
-    for it in range(nt):
-        for j in range(nx-1):
-            phi[j] = np.sum(np.abs(phi[j+1] - phi[j]))
+    for j in range(nx-1):
+        phi[j] = np.sum(np.abs(phi[j+1] - phi[j]))
             
-        phi = phiNew.copy()
     return phi
+
+# def total_var(phi, nt):
+#     nx = len(phi)
+#     phiNew = phi.copy()
+    
+#     for it in range(nt):
+#         for j in range(nx-1):
+#             phi[j] = np.sum(np.abs(phi[j+1] - phi[j]))
+            
+#         phi = phiNew.copy()
+#     return phi
 
 def main():
     """Compare analytic solution with FTCS"""
@@ -97,8 +105,8 @@ def main():
     # Parameters
     xmin = 0.        # Start of model domain (m)
     xmax = 1.        # End of model domain (m)a
-    nx = 40+1        # Number of grid points, including both ends
-    nt = 30          # Number of time steps taken to get to the endTime
+    nx = 40        # Number of grid points, including both ends
+    nt = 10          # Number of time steps taken to get to the endTime
     c = 0.4          # The Courant number
     u = 0.1          # Wind speed(m/s)
     
@@ -112,7 +120,7 @@ def main():
     print("dx =", dx, "dt =", dt, "The Courant number =", c)
         
     # x points
-    x = np.linspace(xmin, xmax, nx)
+    x = np.linspace(xmin, xmax-dx, nx)
 
     # Initial condition
     IC_1 = initial_condition_1(x, a, b, u)
