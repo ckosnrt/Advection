@@ -37,7 +37,7 @@ def advection_FTBS(phi, nt, c):
 def advection_FTCS(phi, nt, c):
     
     for it in range(nt):
-        phiNew = phi - c/2 * (np.roll(phi, -1) - np.roll(phi, 1))
+        phiNew = phi - c/2*(np.roll(phi, -1) - np.roll(phi, 1))
         
         phi = phiNew.copy()
     
@@ -54,13 +54,16 @@ def advection_CTCS(phi, nt, c):
         # FTCS for first step over all internal points
         if it == 0:
             phiNew = phi - c/2*(np.roll(phi, -1) - np.roll(phi, 1))
-                    
+            phi = phiNew.copy()
+        
         # CTCS for rest all time step and over all internal points
-        phiNew = phiOld - c*(np.roll(phi, -1) - np.roll(phi, 1))
-            
-        # Update phi for next time-step
-        phiOld, phi = phi.copy(), phiNew.copy()
-
+        else:
+            phiNew = phiOld - c*(np.roll(phi, -1) - np.roll(phi, 1))
+           
+            # Update phi for next time-step
+            phiOld = phi.copy()
+            phi = phiNew.copy()
+                
     return phi
     
 def lax_wendroff(phi, nt, c):
@@ -122,33 +125,3 @@ def semi_lagrangian(phi, x, dx, nt, c):
         phi = phiNew.copy()
         
     return phi
-
-def advection_CTCS(phi, nt, c):
-
-    # new time-step array for phi
-    phiOld = phi.copy()
-    
-    # CTCS for all time steps
-    for it in range(nt):
-        
-        # FTCS for first step over all internal points
-        if it == 0:
-            phiNew = phi - c/2*(np.roll(phi, -1) - np.roll(phi, 1))
-                    
-        # CTCS for rest all time step and over all internal points
-        phiNew = phiOld - c*(np.roll(phi, -1) - np.roll(phi, 1))
-            
-        # Update phi for next time-step
-        phiOld, phi = phi.copy(), phiNew.copy()
-
-    return phi
-
-# def artificial_diffusion(phi, nt, c):
-    
-#     # new time-step array for phi
-#     phiOld = phi.copy()
-    
-#     for it in range(nt):
-        
-#         if it == 0:
-#             phiNew = 
